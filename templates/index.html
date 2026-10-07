@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Review Detector | Product Authenticity Checker</title>
+    <meta name="description" content="Fake Product Review Detection & Authenticity Checker - Analyze e-commerce reviews for bot spam, fake sentiment, and accurate adjusted star ratings.">
+    <meta name="application-name" content="VeriPrice AI">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f8fafc',
+                            900: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="bg-[#f8fafc] text-gray-900 min-h-screen flex flex-col antialiased">
+
+    <!-- Global Loading Overlay -->
+    <div id="global-loader" class="hidden fixed inset-0 z-50 bg-black/20 backdrop-blur-xs flex flex-col items-center justify-center space-y-3">
+        <div class="w-10 h-10 border-3 border-gray-300 border-t-black rounded-full animate-spin"></div>
+        <div class="text-sm font-semibold text-gray-900 bg-white px-4 py-2 rounded-lg shadow-md border border-gray-200">
+            Analyzing Multi-Store Pricing & Review Authenticity...
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-30">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-black flex items-center justify-center text-white text-xs font-bold tracking-wider">
+                    AI
+                </div>
+                <div>
+                    <h1 class="text-sm font-bold text-gray-900 leading-tight">Fake Review Detector</h1>
+                    <p class="text-xs text-gray-500 font-normal leading-tight">Product Authenticity Checker</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 space-y-8">
+
+        <!-- Top Title Card (Matching Screenshot 1) -->
+        <section class="simple-card py-6 px-6 sm:px-8 text-center bg-white">
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
+                Fake Product Review Detection & Authenticity Checker
+            </h2>
+        </section>
+
+        <!-- Search & Test Cases Card (Matching Screenshot 1) -->
+        <section class="simple-card p-5 sm:p-6 space-y-4 bg-white">
+            
+            <!-- URL / Product Input Bar -->
+            <div class="flex items-center gap-2.5">
+                <div class="relative flex-1 flex items-center border border-gray-300 rounded-lg bg-white px-3.5 py-2 focus-within:border-black focus-within:ring-1 focus-within:ring-black transition">
+                    <input id="search-input" type="text" 
+                           value="https://www.amazon.in/dp/B09XS7JWHH" 
+                           placeholder="Paste Amazon, Flipkart product URL or keyword (e.g. Sony WH-1000XM5, iPhone 15 Pro)..." 
+                           class="w-full text-sm text-gray-800 placeholder-gray-400 outline-none pr-7 bg-transparent font-normal">
+                    <button id="clear-input-btn" type="button" title="Clear input" class="absolute right-3 text-gray-400 hover:text-gray-700 text-sm font-semibold transition">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <button id="analyze-btn" type="button" class="px-6 py-2.5 bg-black hover:bg-neutral-800 text-white font-semibold text-sm rounded-lg transition-colors flex-shrink-0 cursor-pointer">
+                    Analyze
+                </button>
+            </div>
+
+            <!-- Sample Test Cases Box -->
+            <div class="bg-[#f9fafb] border border-gray-200 rounded-lg p-3.5 sm:p-4 space-y-2.5">
+                <div class="text-[11px] font-bold text-gray-700 uppercase tracking-wider">
+                    SAMPLE TEST CASES (CLICK TO TEST):
+                </div>
+                <div class="flex flex-wrap gap-2 text-xs">
+                    <button type="button" class="sample-case-btn bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 px-3 py-1.5 rounded-md shadow-2xs transition cursor-pointer" data-case="case1">
+                        Case 1: Dropshipped Earbuds (Bot Spammed)
+                    </button>
+                    <button type="button" class="sample-case-btn bg-gray-900 text-white border-gray-900 px-3 py-1.5 rounded-md shadow-2xs transition cursor-pointer" data-case="case2">
+                        Case 2: Sony WH-1000XM5 (Genuine Reviews)
+                    </button>
+                    <button type="button" class="sample-case-btn bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 px-3 py-1.5 rounded-md shadow-2xs transition cursor-pointer" data-case="case3">
+                        Case 3: Ayurvedic Slimming Juice (Cashback Spam)
+                    </button>
+                    <button type="button" class="sample-case-btn bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 px-3 py-1.5 rounded-md shadow-2xs transition cursor-pointer" data-case="case4">
+                        Case 4: Anker Fast Charger (Authentic Feedback)
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 1. Review Authenticity & Genuineness Section (Matching Screenshot 2) -->
+        <section id="results-section" class="space-y-4">
+            
+            <!-- Upper Grid: Left Card (Ratings) + Right Card (Genuineness Score) -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-stretch">
+                
+                <!-- Left Card: Product Title, Category, and Claimed vs Adjusted True Rating -->
+                <div class="md:col-span-8 simple-card p-5 sm:p-6 space-y-3 bg-white flex flex-col justify-between">
+                    <div>
+                        <div id="result-category" class="text-xs font-bold text-gray-900 uppercase tracking-wider mb-1">
+                            PREMIUM AUDIO
+                        </div>
+                        <h3 id="result-title" class="text-lg sm:text-xl font-bold text-gray-900 leading-snug">
+                            Sony WH-1000XM5 Wireless Premium Noise Cancelling Headphones
+                        </h3>
+                        <div id="result-subtitle" class="text-xs text-gray-500 font-medium flex items-center gap-1.5 mt-1.5">
+                            <i class="fa-solid fa-bolt text-amber-500 text-xs"></i> 
+                            <span id="result-subtitle-text">Case Study 2 · Scanned 4,210 Reviews</span>
+                        </div>
+                    </div>
+
+                    <!-- Inner Rating Comparison Box -->
+                    <div class="bg-[#f8fafc] border border-slate-100 rounded-xl p-4 sm:p-5 mt-3">
+                        <div class="grid grid-cols-11 items-center">
+                            
+                            <!-- Left Column: Claimed Store Rating -->
+                            <div class="col-span-5 text-center space-y-1">
+                                <div class="text-[10px] sm:text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                                    CLAIMED STORE RATING
+                                </div>
+                                <div id="claimed-rating" class="text-3xl sm:text-4xl font-extrabold text-gray-900">
+                                    4.6
+                                </div>
+                                <div id="claimed-stars" class="text-amber-500 text-sm flex justify-center gap-1">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                </div>
+                                <div id="claimed-note" class="text-[11px] text-gray-500">
+                                    Based on 4,210 store reviews
+                                </div>
+                            </div>
+
+                            <!-- Divider: VS -->
+                            <div class="col-span-1 flex items-center justify-center">
+                                <span class="text-xs font-medium text-gray-400 uppercase">vs</span>
+                            </div>
+
+                            <!-- Right Column: Adjusted True Rating -->
+                            <div class="col-span-5 text-center space-y-1">
+                                <div class="text-[10px] sm:text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                                    ADJUSTED TRUE RATING
+                                </div>
+                                <div id="adjusted-rating" class="text-3xl sm:text-4xl font-extrabold text-gray-900">
+                                    4.5
+                                </div>
+                                <div id="adjusted-stars" class="text-amber-500 text-sm flex justify-center gap-1">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                </div>
+                                <div id="adjusted-note" class="text-[11px] text-gray-500">
+                                    Accurate Rating (±0.1 Star Variance)
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Card: Genuineness Score & Real vs Fake Breakdown -->
+                <div class="md:col-span-4 simple-card p-5 sm:p-6 bg-white flex flex-col justify-between text-left space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm sm:text-base font-bold text-gray-900">
+                            Genuineness Score
+                        </span>
+                        <span class="text-[11px] font-semibold text-gray-600 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded">
+                            Total: <b id="score-total-reviews">4,210</b>
+                        </span>
+                    </div>
+
+                    <div id="genuineness-score" class="text-5xl sm:text-6xl font-extrabold text-black text-center py-2 tracking-tight">
+                        94%
+                    </div>
+
+                    <!-- Visual Split Bar (Real vs Fake) -->
+                    <div class="space-y-1.5 pt-2 border-t border-gray-100">
+                        <div class="w-full h-2 rounded-full bg-gray-100 flex overflow-hidden">
+                            <div id="bar-real-pct" style="width: 94%" class="bg-emerald-500 h-full transition-all"></div>
+                            <div id="bar-fake-pct" style="width: 6%" class="bg-rose-500 h-full transition-all"></div>
+                        </div>
+
+                        <!-- Real vs Fake Summary Stats -->
+                        <div class="grid grid-cols-2 gap-2 text-xs pt-1">
+                            <div class="p-1.5 rounded bg-emerald-50 border border-emerald-100 text-center">
+                                <div class="text-[10px] text-emerald-700 font-bold uppercase">Real Reviews</div>
+                                <div class="font-extrabold text-emerald-800 text-sm" id="count-real-display">3,957</div>
+                                <div class="text-[10px] text-emerald-600 font-medium" id="pct-real-display">94% Authentic</div>
+                            </div>
+                            <div class="p-1.5 rounded bg-rose-50 border border-rose-100 text-center">
+                                <div class="text-[10px] text-rose-700 font-bold uppercase">Fake Reviews</div>
+                                <div class="font-extrabold text-rose-800 text-sm" id="count-fake-display">253</div>
+                                <div class="text-[10px] text-rose-600 font-medium" id="pct-fake-display">6% Deceptive</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Full-Width Card: Final Verdict & Confidence & Recommended Alternatives -->
+            <div id="verdict-card" class="bg-[#f0fdf4] border border-[#86efac] rounded-xl p-5 space-y-2.5 transition-all">
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <div class="flex items-center space-x-2.5">
+                        <div id="verdict-icon-box" class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
+                            <i id="verdict-icon" class="fa-solid fa-check"></i>
+                        </div>
+                        <span id="verdict-title" class="font-extrabold text-sm sm:text-base tracking-wide text-emerald-800">
+                            FINAL VERDICT: SAFE TO BUY
+                        </span>
+                    </div>
+                    <div id="verdict-confidence" class="text-xs text-gray-600 font-medium">
+                        Confidence: 98.6%
+                    </div>
+                </div>
+
+                <p id="verdict-description" class="text-xs sm:text-sm text-gray-700 leading-relaxed">
+                    Reviews demonstrate authentic buyer sentiment with rich technical descriptions, verified purchase badges, and balanced critique of physical design changes.
+                </p>
+
+                <div id="verdict-alt-box" class="pt-1">
+                    <div class="inline-block bg-white/80 border border-emerald-200/60 rounded-md px-3 py-1.5 text-xs sm:text-sm text-gray-800 shadow-2xs">
+                        Recommended Alternative: <span id="verdict-alt-text" class="font-bold">Bose QuietComfort Ultra or Sennheiser Momentum 4</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 2. Product Overview & Simple Lowest Price Display -->
+        <section class="simple-card p-5 sm:p-6 bg-white space-y-4">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                
+                <!-- Product Details (Without Picture) -->
+                <div class="lg:col-span-8 space-y-2 text-left">
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-gray-100 text-gray-700 text-xs font-semibold">
+                        <span id="product-category-display">Electronics & Audio</span>
+                    </div>
+                    <h3 id="product-title-display" class="text-lg sm:text-xl font-bold text-gray-900 leading-tight">
+                        Sony WH-1000XM5 Wireless Noise-Canceling Headphones
+                    </h3>
+                    <div class="flex flex-wrap items-center gap-3 pt-1 text-xs text-gray-500">
+                        <span><i class="fa-solid fa-layer-group text-gray-400 mr-1"></i> Multi-Store Synced</span>
+                        <span><i class="fa-solid fa-shield-halved text-gray-400 mr-1"></i> 2-Tier AI Scanned</span>
+                    </div>
+                    <img id="product-thumbnail" src="" alt="Product" class="hidden">
+                </div>
+
+                <!-- Simple Lowest Price Display -->
+                <div class="lg:col-span-4 p-4 rounded-xl border border-gray-200 bg-[#f9fafb] flex flex-col justify-between space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            Lowest Price
+                        </span>
+                        <span id="best-deal-store" class="text-xs font-semibold text-gray-700 bg-white border border-gray-200 px-2 py-0.5 rounded">
+                            Flipkart
+                        </span>
+                    </div>
+
+                    <div>
+                        <div class="text-2xl font-bold text-gray-900" id="best-deal-price">₹28,490</div>
+                        <div class="text-xs text-gray-500 mt-0.5" id="potential-savings">Save up to ₹2,200 vs other stores</div>
+                    </div>
+
+                    <a id="best-deal-btn" href="#" target="_blank" class="text-xs font-medium text-gray-700 hover:text-black flex items-center gap-1 transition pt-1">
+                        View store deal <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3. Real-Time Multi-Store Price Comparison (Keeping the app like previous) -->
+        <section class="space-y-3">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-tags text-gray-700"></i> Real-Time Multi-Store Price Comparison
+                    </h3>
+                    <p class="text-xs text-gray-500">Ranked from lowest total landed cost across verified retailers</p>
+                </div>
+            </div>
+
+            <div id="offers-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                <!-- Dynamically Populated by app.js -->
+            </div>
+        </section>
+
+        <!-- 4. Review Audit Trail & Bot Classifications (Keeping the app like previous) -->
+        <section class="simple-card p-5 sm:p-6 bg-white space-y-4">
+            <div class="border-b border-gray-100 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <h3 class="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-robot text-gray-700"></i> Review Audit Trail & AI Diagnostics
+                    </h3>
+                    <p class="text-xs text-gray-500">2-Tier Heuristic Pattern Analysis & Neural NLP Classification</p>
+                </div>
+
+                <!-- Filter Tabs: Real vs Fake Distinction -->
+                <div class="flex items-center space-x-1 bg-gray-100 p-1 rounded-lg text-xs font-medium">
+                    <button class="review-filter-btn px-2.5 py-1 rounded bg-black text-white transition" data-filter="ALL">All Reviews (<span id="count-all">10</span>)</button>
+                    <button class="review-filter-btn px-2.5 py-1 rounded text-emerald-800 hover:bg-emerald-100 transition" data-filter="AUTHENTIC">Real Reviews (<span id="count-authentic">7</span>)</button>
+                    <button class="review-filter-btn px-2.5 py-1 rounded text-rose-800 hover:bg-rose-100 transition" data-filter="BOT_DETECTED">Fake Reviews (<span id="count-bots">2</span>)</button>
+                    <button class="review-filter-btn px-2.5 py-1 rounded text-amber-800 hover:bg-amber-100 transition" data-filter="SUSPICIOUS">Suspicious (<span id="count-suspicious">1</span>)</button>
+                </div>
+            </div>
+
+            <!-- Summary Badges Ribbon: Real vs Fake Distinction -->
+            <div class="grid grid-cols-3 gap-3 text-xs">
+                <div class="p-3.5 rounded-lg bg-emerald-50 border border-emerald-200">
+                    <div class="text-2xl font-extrabold text-emerald-800" id="ribbon-authentic">7</div>
+                    <div class="text-emerald-900 font-bold mt-0.5">Real Reviews</div>
+                    <div class="text-[11px] text-emerald-700">Verified authentic buyers</div>
+                </div>
+                <div class="p-3.5 rounded-lg bg-rose-50 border border-rose-200">
+                    <div class="text-2xl font-extrabold text-rose-800" id="ribbon-bots">2</div>
+                    <div class="text-rose-900 font-bold mt-0.5">Fake Reviews</div>
+                    <div class="text-[11px] text-rose-700">Bots & template duplicates</div>
+                </div>
+                <div class="p-3.5 rounded-lg bg-amber-50 border border-amber-200">
+                    <div class="text-2xl font-extrabold text-amber-800" id="ribbon-suspicious">1</div>
+                    <div class="text-amber-900 font-bold mt-0.5">Suspicious Anomaly</div>
+                    <div class="text-[11px] text-amber-700">Cashback / incentive signs</div>
+                </div>
+            </div>
+
+            <!-- Review Items Container -->
+            <div id="reviews-container" class="space-y-3 max-h-[380px] overflow-y-auto pr-1">
+                <!-- Populated dynamically by app.js -->
+            </div>
+        </section>
+
+        <!-- 5. Aspect-Based Sentiment Analysis (ABSA) (Keeping the app like previous) -->
+        <section class="space-y-3">
+            <div>
+                <h3 class="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie text-gray-700"></i> Aspect-Based Sentiment Analysis (ABSA)
+                </h3>
+                <p class="text-xs text-gray-500">Synthesized strictly from verified authentic customer feedback</p>
+            </div>
+
+            <div id="absa-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                <!-- Populated dynamically by app.js -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Price Drop Alert Modal -->
+    <div id="alert-modal" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl p-6 max-w-md w-full border border-gray-200 shadow-xl space-y-4">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                    <i class="fa-solid fa-bell text-gray-700"></i> Track Price Drop
+                </h3>
+                <button id="close-alert-modal-btn" type="button" class="text-gray-400 hover:text-gray-700 text-base">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="alert-form" class="space-y-3.5">
+                <input type="hidden" id="alert-product-name" value="">
+                
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 mb-1">Current Best Price</label>
+                    <div class="text-lg font-extrabold text-emerald-700" id="alert-current-price-val">₹28,490</div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Target Price (INR)</label>
+                    <input id="alert-target-price-input" type="number" required placeholder="e.g. 26000" class="w-full bg-white border border-gray-300 rounded-lg px-3.5 py-2 text-gray-900 focus:outline-none focus:border-black text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Your Email Address</label>
+                    <input id="alert-email-input" type="email" required placeholder="your.email@example.com" class="w-full bg-white border border-gray-300 rounded-lg px-3.5 py-2 text-gray-900 focus:outline-none focus:border-black text-sm">
+                </div>
+
+                <button type="submit" class="w-full py-2.5 rounded-lg bg-black hover:bg-neutral-800 text-white font-semibold text-sm transition shadow-2xs">
+                    Activate Tracker
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-200 py-6 bg-white text-xs text-gray-500 mt-12">
+        <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div>
+                <span class="font-semibold text-gray-700">Fake Review Detector</span> • VeriPrice AI Authenticity Engine
+            </div>
+            <div class="text-gray-400">
+                Multi-Store Aggregation • Deceptive Bot Detection • Aspect Sentiment Analysis
+            </div>
+        </div>
+    </footer>
+
+    <!-- App JavaScript -->
+    <script src="/static/js/app.js?v=2.6"></script>
+</body>
+</html>
