@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fake Review Detector | Product Authenticity Checker</title>
     <meta name="description" content="Fake Product Review Detection & Authenticity Checker - Analyze e-commerce reviews for bot spam, fake sentiment, and accurate adjusted star ratings.">
-    <meta name="application-name" content="VeriPrice AI">
+    <meta name="application-name" content="VeriPrice">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,7 +26,7 @@
 
     <!-- Google Fonts & Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/styles.css?v=3.0">
 </head>
 <body class="bg-[#f8fafc] text-gray-900 min-h-screen flex flex-col antialiased">
 
@@ -43,7 +43,7 @@
         <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="w-8 h-8 rounded-lg bg-black flex items-center justify-center text-white text-xs font-bold tracking-wider">
-                    AI
+                    <i class="fa-solid fa-shield-check text-sm"></i>
                 </div>
                 <div>
                     <h1 class="text-sm font-bold text-gray-900 leading-tight">Fake Review Detector</h1>
@@ -120,7 +120,7 @@
                             Sony WH-1000XM5 Wireless Premium Noise Cancelling Headphones
                         </h3>
                         <div id="result-subtitle" class="text-xs text-gray-500 font-medium flex items-center gap-1.5 mt-1.5">
-                            <i class="fa-solid fa-bolt text-amber-500 text-xs"></i> 
+                            <i class="fa-solid fa-bolt text-black text-xs"></i> 
                             <span id="result-subtitle-text">Case Study 2 · Scanned 4,210 Reviews</span>
                         </div>
                     </div>
@@ -137,7 +137,7 @@
                                 <div id="claimed-rating" class="text-3xl sm:text-4xl font-extrabold text-gray-900">
                                     4.6
                                 </div>
-                                <div id="claimed-stars" class="text-amber-500 text-sm flex justify-center gap-1">
+                                <div id="claimed-stars" class="text-black text-sm flex justify-center gap-1">
                                     <i class="fa-solid fa-star"></i>
                                     <i class="fa-solid fa-star"></i>
                                     <i class="fa-solid fa-star"></i>
@@ -162,7 +162,7 @@
                                 <div id="adjusted-rating" class="text-3xl sm:text-4xl font-extrabold text-gray-900">
                                     4.5
                                 </div>
-                                <div id="adjusted-stars" class="text-amber-500 text-sm flex justify-center gap-1">
+                                <div id="adjusted-stars" class="text-black text-sm flex justify-center gap-1">
                                     <i class="fa-solid fa-star"></i>
                                     <i class="fa-solid fa-star"></i>
                                     <i class="fa-solid fa-star"></i>
@@ -196,21 +196,21 @@
                     <!-- Visual Split Bar (Real vs Fake) -->
                     <div class="space-y-1.5 pt-2 border-t border-gray-100">
                         <div class="w-full h-2 rounded-full bg-gray-100 flex overflow-hidden">
-                            <div id="bar-real-pct" style="width: 94%" class="bg-emerald-500 h-full transition-all"></div>
-                            <div id="bar-fake-pct" style="width: 6%" class="bg-rose-500 h-full transition-all"></div>
+                            <div id="bar-real-pct" style="width: 94%" class="bg-black h-full transition-all"></div>
+                            <div id="bar-fake-pct" style="width: 6%" class="bg-gray-300 h-full transition-all"></div>
                         </div>
 
                         <!-- Real vs Fake Summary Stats -->
                         <div class="grid grid-cols-2 gap-2 text-xs pt-1">
-                            <div class="p-1.5 rounded bg-emerald-50 border border-emerald-100 text-center">
-                                <div class="text-[10px] text-emerald-700 font-bold uppercase">Real Reviews</div>
-                                <div class="font-extrabold text-emerald-800 text-sm" id="count-real-display">3,957</div>
-                                <div class="text-[10px] text-emerald-600 font-medium" id="pct-real-display">94% Authentic</div>
+                            <div class="p-1.5 rounded bg-gray-50 border border-gray-200 text-center">
+                                <div class="text-[10px] text-gray-700 font-bold uppercase">Real Reviews</div>
+                                <div class="font-extrabold text-black text-sm" id="count-real-display">3,957</div>
+                                <div class="text-[10px] text-gray-500 font-medium" id="pct-real-display">94% Authentic</div>
                             </div>
-                            <div class="p-1.5 rounded bg-rose-50 border border-rose-100 text-center">
-                                <div class="text-[10px] text-rose-700 font-bold uppercase">Fake Reviews</div>
-                                <div class="font-extrabold text-rose-800 text-sm" id="count-fake-display">253</div>
-                                <div class="text-[10px] text-rose-600 font-medium" id="pct-fake-display">6% Deceptive</div>
+                            <div class="p-1.5 rounded bg-gray-50 border border-gray-200 text-center">
+                                <div class="text-[10px] text-gray-700 font-bold uppercase">Fake Reviews</div>
+                                <div class="font-extrabold text-black text-sm" id="count-fake-display">253</div>
+                                <div class="text-[10px] text-gray-500 font-medium" id="pct-fake-display">6% Deceptive</div>
                             </div>
                         </div>
                     </div>
@@ -219,17 +219,17 @@
             </div>
 
             <!-- Bottom Full-Width Card: Final Verdict & Confidence & Recommended Alternatives -->
-            <div id="verdict-card" class="bg-[#f0fdf4] border border-[#86efac] rounded-xl p-5 space-y-2.5 transition-all">
+            <div id="verdict-card" class="bg-white border-2 border-black rounded-xl p-5 space-y-2.5 transition-all">
                 <div class="flex items-center justify-between flex-wrap gap-2">
                     <div class="flex items-center space-x-2.5">
-                        <div id="verdict-icon-box" class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
+                        <div id="verdict-icon-box" class="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs">
                             <i id="verdict-icon" class="fa-solid fa-check"></i>
                         </div>
-                        <span id="verdict-title" class="font-extrabold text-sm sm:text-base tracking-wide text-emerald-800">
+                        <span id="verdict-title" class="font-extrabold text-sm sm:text-base tracking-wide text-black">
                             FINAL VERDICT: SAFE TO BUY
                         </span>
                     </div>
-                    <div id="verdict-confidence" class="text-xs text-gray-600 font-medium">
+                    <div id="verdict-confidence" class="text-xs text-gray-500 font-medium">
                         Confidence: 98.6%
                     </div>
                 </div>
@@ -239,7 +239,7 @@
                 </p>
 
                 <div id="verdict-alt-box" class="pt-1">
-                    <div class="inline-block bg-white/80 border border-emerald-200/60 rounded-md px-3 py-1.5 text-xs sm:text-sm text-gray-800 shadow-2xs">
+                    <div class="inline-block bg-gray-50 border border-gray-300 rounded-md px-3 py-1.5 text-xs sm:text-sm text-gray-900 shadow-2xs">
                         Recommended Alternative: <span id="verdict-alt-text" class="font-bold">Bose QuietComfort Ultra or Sennheiser Momentum 4</span>
                     </div>
                 </div>
@@ -261,7 +261,7 @@
                     </h3>
                     <div class="flex flex-wrap items-center gap-3 pt-1 text-xs text-gray-500">
                         <span><i class="fa-solid fa-layer-group text-gray-400 mr-1"></i> Multi-Store Synced</span>
-                        <span><i class="fa-solid fa-shield-halved text-gray-400 mr-1"></i> 2-Tier AI Scanned</span>
+                        <span><i class="fa-solid fa-shield-halved text-gray-400 mr-1"></i> Multi-Point Verified Scan</span>
                     </div>
                     <img id="product-thumbnail" src="" alt="Product" class="hidden">
                 </div>
@@ -311,36 +311,36 @@
             <div class="border-b border-gray-100 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                     <h3 class="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
-                        <i class="fa-solid fa-robot text-gray-700"></i> Review Audit Trail & AI Diagnostics
+                        <i class="fa-solid fa-list-check text-gray-700"></i> Review Audit Trail & Diagnostics
                     </h3>
-                    <p class="text-xs text-gray-500">2-Tier Heuristic Pattern Analysis & Neural NLP Classification</p>
+                    <p class="text-xs text-gray-500">2-Tier Pattern Analysis & Natural Language Classification</p>
                 </div>
 
                 <!-- Filter Tabs: Real vs Fake Distinction -->
                 <div class="flex items-center space-x-1 bg-gray-100 p-1 rounded-lg text-xs font-medium">
-                    <button class="review-filter-btn px-2.5 py-1 rounded bg-black text-white transition" data-filter="ALL">All Reviews (<span id="count-all">10</span>)</button>
-                    <button class="review-filter-btn px-2.5 py-1 rounded text-emerald-800 hover:bg-emerald-100 transition" data-filter="AUTHENTIC">Real Reviews (<span id="count-authentic">7</span>)</button>
-                    <button class="review-filter-btn px-2.5 py-1 rounded text-rose-800 hover:bg-rose-100 transition" data-filter="BOT_DETECTED">Fake Reviews (<span id="count-bots">2</span>)</button>
-                    <button class="review-filter-btn px-2.5 py-1 rounded text-amber-800 hover:bg-amber-100 transition" data-filter="SUSPICIOUS">Suspicious (<span id="count-suspicious">1</span>)</button>
+                    <button class="review-filter-btn px-2.5 py-1 rounded bg-black text-white font-semibold transition" data-filter="ALL">All Reviews (<span id="count-all">10</span>)</button>
+                    <button class="review-filter-btn px-2.5 py-1 rounded text-gray-700 hover:bg-gray-200 transition" data-filter="AUTHENTIC">Real Reviews (<span id="count-authentic">7</span>)</button>
+                    <button class="review-filter-btn px-2.5 py-1 rounded text-gray-700 hover:bg-gray-200 transition" data-filter="BOT_DETECTED">Fake Reviews (<span id="count-bots">2</span>)</button>
+                    <button class="review-filter-btn px-2.5 py-1 rounded text-gray-700 hover:bg-gray-200 transition" data-filter="SUSPICIOUS">Suspicious (<span id="count-suspicious">1</span>)</button>
                 </div>
             </div>
 
             <!-- Summary Badges Ribbon: Real vs Fake Distinction -->
             <div class="grid grid-cols-3 gap-3 text-xs">
-                <div class="p-3.5 rounded-lg bg-emerald-50 border border-emerald-200">
-                    <div class="text-2xl font-extrabold text-emerald-800" id="ribbon-authentic">7</div>
-                    <div class="text-emerald-900 font-bold mt-0.5">Real Reviews</div>
-                    <div class="text-[11px] text-emerald-700">Verified authentic buyers</div>
+                <div class="p-3.5 rounded-lg bg-gray-50 border border-gray-200">
+                    <div class="text-2xl font-extrabold text-black" id="ribbon-authentic">7</div>
+                    <div class="text-gray-900 font-bold mt-0.5">Real Reviews</div>
+                    <div class="text-[11px] text-gray-500">Verified authentic buyers</div>
                 </div>
-                <div class="p-3.5 rounded-lg bg-rose-50 border border-rose-200">
-                    <div class="text-2xl font-extrabold text-rose-800" id="ribbon-bots">2</div>
-                    <div class="text-rose-900 font-bold mt-0.5">Fake Reviews</div>
-                    <div class="text-[11px] text-rose-700">Bots & template duplicates</div>
+                <div class="p-3.5 rounded-lg bg-gray-50 border border-gray-200">
+                    <div class="text-2xl font-extrabold text-black" id="ribbon-bots">2</div>
+                    <div class="text-gray-900 font-bold mt-0.5">Fake Reviews</div>
+                    <div class="text-[11px] text-gray-500">Bots & template duplicates</div>
                 </div>
-                <div class="p-3.5 rounded-lg bg-amber-50 border border-amber-200">
-                    <div class="text-2xl font-extrabold text-amber-800" id="ribbon-suspicious">1</div>
-                    <div class="text-amber-900 font-bold mt-0.5">Suspicious Anomaly</div>
-                    <div class="text-[11px] text-amber-700">Cashback / incentive signs</div>
+                <div class="p-3.5 rounded-lg bg-gray-50 border border-gray-200">
+                    <div class="text-2xl font-extrabold text-black" id="ribbon-suspicious">1</div>
+                    <div class="text-gray-900 font-bold mt-0.5">Suspicious Anomaly</div>
+                    <div class="text-[11px] text-gray-500">Cashback / incentive signs</div>
                 </div>
             </div>
 
@@ -383,7 +383,7 @@
                 
                 <div>
                     <label class="block text-xs font-semibold text-gray-500 mb-1">Current Best Price</label>
-                    <div class="text-lg font-extrabold text-emerald-700" id="alert-current-price-val">₹28,490</div>
+                    <div class="text-lg font-extrabold text-black" id="alert-current-price-val">₹28,490</div>
                 </div>
 
                 <div>
@@ -407,7 +407,7 @@
     <footer class="border-t border-gray-200 py-6 bg-white text-xs text-gray-500 mt-12">
         <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
             <div>
-                <span class="font-semibold text-gray-700">Fake Review Detector</span> • VeriPrice AI Authenticity Engine
+                <span class="font-semibold text-gray-700">Fake Review Detector</span> • VeriPrice Authenticity Engine
             </div>
             <div class="text-gray-400">
                 Multi-Store Aggregation • Deceptive Bot Detection • Aspect Sentiment Analysis
@@ -416,6 +416,6 @@
     </footer>
 
     <!-- App JavaScript -->
-    <script src="/static/js/app.js?v=2.6"></script>
+    <script src="/static/js/app.js?v=3.0"></script>
 </body>
 </html>

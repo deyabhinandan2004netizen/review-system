@@ -187,11 +187,22 @@ class ReviewDetector:
         # 4. Lexical Diversity & Low Entropy Spam
         if len(words) > 0:
             diversity_ratio = len(set(words)) / len(words)
-            if len(words) >= 6 and diversity_ratio < 0.45:
+            if len(words) >= 6 and diversity_ratio <= 0.55:
                 flags.append("Low Lexical Diversity: Highly repetitive wording detected")
-                penalty += 0.25
+                penalty += 0.30
         
-        # 5. Overly short non-informative 5-star review
+        # 5. Incentivized or cashback solicitation pattern
+        incentive_words = ["cashback", "paytm", "whatsapp", "scratch card", "refund", "gift voucher", "gift card"]
+        if any(w in text_lower for w in incentive_words):
+            flags.append("Incentivized Review: Signs of off-platform reward or cashback solicitation")
+            penalty += 0.35
+
+        # 6. Unverified purchase on top rating
+        if not review.verified_purchase and review.rating >= 4.5:
+            flags.append("Unverified Buyer: Review from unverified purchase account")
+            penalty += 0.15
+
+        # 7. Overly short non-informative 5-star review
         if len(words) <= 3 and review.rating == 5.0 and not review.verified_purchase:
             flags.append("Generic 1-Liner: Unverified 3-word review without purchase confirmation")
             penalty += 0.20
@@ -211,7 +222,7 @@ class ReviewDetector:
         matched_markers = [m for m in AI_SYNTHETIC_MARKERS if m in text_lower]
         if matched_markers:
             ai_score += min(0.6, len(matched_markers) * 0.25)
-            ai_reasons.append(f"Synthetic AI Clichés: Contains pattern [{', '.join(matched_markers[:2])}]")
+            ai_reasons.append(f"Synthetic Clichés: Contains pattern [{', '.join(matched_markers[:2])}]")
 
         # Check structural formality & excessive punctuation
         if EXCLAMATION_PATTERN.search(review.text):

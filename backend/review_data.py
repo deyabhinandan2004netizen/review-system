@@ -8,7 +8,7 @@ now = datetime.now()
 
 SAMPLE_REVIEWS_CATALOG = {
     # Case 1: Dropshipped Earbuds (Bot Spammed)
-    "b09xs7jwhh|dropshipped earbuds": [
+    "dropshipped earbuds|cheap earbuds|fake earbuds": [
         ReviewItem(
             id="bot-ear-01",
             author="PrimeBuyer_991",
@@ -91,7 +91,7 @@ SAMPLE_REVIEWS_CATALOG = {
         ),
         ReviewItem(
             id="bot-ear-09",
-            author="AI_Review_Bot_01",
+            author="Promo_Bot_01",
             rating=5.0,
             date=(now - timedelta(days=1)).strftime("%Y-%m-%d"),
             title="Unparalleled acoustic brilliance",
@@ -111,8 +111,8 @@ SAMPLE_REVIEWS_CATALOG = {
         )
     ],
 
-    # Case 2: Sony WH-1000XM5 (Genuine Reviews)
-    "sony wh-1000xm5|sony": [
+    # Case 2: Sony WH-1000XM5 (Genuine Reviews with Full Audit Trail)
+    "sony wh-1000xm5|sony|b09xs7jwhh": [
         ReviewItem(
             id="rev-001",
             author="Aditya Sharma",
@@ -174,16 +174,6 @@ SAMPLE_REVIEWS_CATALOG = {
             platform="Croma"
         ),
         ReviewItem(
-            id="rev-007",
-            author="BotUser_Promo",
-            rating=5.0,
-            date=(now - timedelta(days=24)).strftime("%Y-%m-%d"),
-            title="BEST PRODUCT EVER",
-            text="THIS IS A GAME CHANGER AND A TESTAMENT TO INNOVATION! Exceeded all my expectations in every aspect, look no further 5 stars all the way!!!!!!",
-            verified_purchase=False,
-            platform="Walmart"
-        ),
-        ReviewItem(
             id="rev-008",
             author="Deepak Nair",
             rating=4.0,
@@ -192,6 +182,190 @@ SAMPLE_REVIEWS_CATALOG = {
             text="At 30k rupees it is definitely an investment, but if you work in open offices or travel frequently, the peace of mind is worth the price.",
             verified_purchase=True,
             platform="Flipkart"
+        ),
+        ReviewItem(
+            id="rev-009",
+            author="Vikram Sengupta",
+            rating=5.0,
+            date=(now - timedelta(days=31)).strftime("%Y-%m-%d"),
+            title="Massive leap in mic isolation",
+            text="The 4 beamforming microphones on each earcup isolate my voice effortlessly during outdoor calls in Bangalore traffic. Colleagues noticed zero background horn noise.",
+            verified_purchase=True,
+            platform="Amazon"
+        ),
+        ReviewItem(
+            id="rev-010",
+            author="Neha Chawla",
+            rating=4.0,
+            date=(now - timedelta(days=36)).strftime("%Y-%m-%d"),
+            title="Great soundstage on LDAC, earcups get warm",
+            text="Exceptional soundstage on LDAC with high-res audio streaming, but synthetic leather ear cushions get slightly warm in humid weather without air conditioning.",
+            verified_purchase=True,
+            platform="Flipkart"
+        ),
+        ReviewItem(
+            id="rev-011",
+            author="Siddharth Mehta",
+            rating=5.0,
+            date=(now - timedelta(days=40)).strftime("%Y-%m-%d"),
+            title="Instant multipoint switching",
+            text="Multipoint Bluetooth switching between MacBook Pro and iPhone 15 is instantaneous. Seamless handoff when phone calls ring during video meetings.",
+            verified_purchase=True,
+            platform="Amazon"
+        ),
+        ReviewItem(
+            id="rev-012",
+            author="Ananya Swaminathan",
+            rating=4.0,
+            date=(now - timedelta(days=45)).strftime("%Y-%m-%d"),
+            title="Stellar instrument separation in acoustic tracks",
+            text="Clean acoustics and stellar instrument separation in classical and jazz tracks. The touch sensor volume swipe takes some muscle memory to master.",
+            verified_purchase=True,
+            platform="Croma"
+        ),
+        ReviewItem(
+            id="rev-013",
+            author="Rajesh Varma",
+            rating=5.0,
+            date=(now - timedelta(days=52)).strftime("%Y-%m-%d"),
+            title="Rapid PD charging is a lifesaver",
+            text="Quick charging is phenomenal: 3 minutes plugged into a 30W USB-C PD brick gave me almost 3 full hours of playback before boarding my flight.",
+            verified_purchase=True,
+            platform="Amazon"
+        ),
+        ReviewItem(
+            id="rev-014",
+            author="Divya Krishnan",
+            rating=3.5,
+            date=(now - timedelta(days=58)).strftime("%Y-%m-%d"),
+            title="Superb ANC, but case takes too much space",
+            text="Sound and ANC are 10/10, but the headphones cannot fold inward like my older XM4s. Takes up considerable room in an everyday laptop backpack.",
+            verified_purchase=True,
+            platform="Flipkart"
+        ),
+        ReviewItem(
+            id="rev-015",
+            author="Karthik Raman",
+            rating=5.0,
+            date=(now - timedelta(days=63)).strftime("%Y-%m-%d"),
+            title="Custom 5-band EQ makes it shine",
+            text="Sony Headphones Connect app allows precise custom 5-band EQ and Clear Bass adjustments. Once dialed in, bass response is tight and punchy without distortion.",
+            verified_purchase=True,
+            platform="Amazon"
+        ),
+        ReviewItem(
+            id="rev-016",
+            author="Pooja Sundaram",
+            rating=4.0,
+            date=(now - timedelta(days=70)).strftime("%Y-%m-%d"),
+            title="Speak-to-chat is very practical",
+            text="Speak-to-Chat feature automatically pauses playback when I talk to flight attendants, which is very handy. Clamping force is light and fatigue-free.",
+            verified_purchase=True,
+            platform="Croma"
+        ),
+        ReviewItem(
+            id="rev-017",
+            author="Tarun Bhatia",
+            rating=5.0,
+            date=(now - timedelta(days=76)).strftime("%Y-%m-%d"),
+            title="Metro commute silence",
+            text="Noise cancellation in metro rail commute silences screeching metal rails and loud station announcements with uncanny efficiency.",
+            verified_purchase=True,
+            platform="Amazon"
+        ),
+        ReviewItem(
+            id="rev-018",
+            author="Meera Nambiar",
+            rating=4.0,
+            date=(now - timedelta(days=84)).strftime("%Y-%m-%d"),
+            title="High build quality and eco packaging",
+            text="Top-of-the-line build quality and clean minimalist design. The plastic-free recycled material packaging is a thoughtful touch from Sony.",
+            verified_purchase=True,
+            platform="Flipkart"
+        ),
+        ReviewItem(
+            id="rev-019",
+            author="Arunachalam S",
+            rating=4.5,
+            date=(now - timedelta(days=91)).strftime("%Y-%m-%d"),
+            title="Better high frequency reduction than QC45",
+            text="Switched from Bose QuietComfort 45. The active noise reduction floor is perceptibly quieter and high-frequency train shrieks are subdued much better.",
+            verified_purchase=True,
+            platform="Amazon"
+        ),
+
+        # Deceptive Bot Reviews (Duplicate copy-paste templates + burst spike date)
+        ReviewItem(
+            id="rev-bot-01",
+            author="PrimeBuyer_881",
+            rating=5.0,
+            date=(now - timedelta(days=1)).strftime("%Y-%m-%d"),
+            title="AMAZING PURCHASE MUST BUY EVER",
+            text="THIS IS A GAME CHANGER AND A TESTAMENT TO INNOVATION! Exceeded all my expectations in every aspect, look no further 5 stars all the way!!!!!!",
+            verified_purchase=False,
+            platform="Amazon"
+        ),
+        ReviewItem(
+            id="rev-bot-02",
+            author="SuperSaver_912",
+            rating=5.0,
+            date=(now - timedelta(days=1)).strftime("%Y-%m-%d"),
+            title="BEST EVER TOP NOTCH",
+            text="THIS IS A GAME CHANGER AND A TESTAMENT TO INNOVATION! Exceeded all my expectations in every aspect, look no further 5 stars all the way!!!!!!",
+            verified_purchase=False,
+            platform="Amazon"
+        ),
+        ReviewItem(
+            id="rev-bot-03",
+            author="Promo_Bot_Sony",
+            rating=5.0,
+            date=(now - timedelta(days=1)).strftime("%Y-%m-%d"),
+            title="Unparalleled acoustic brilliance",
+            text="Cannot recommend enough! Seamlessly blends cutting-edge technology with pure perfection. A beacon of modern audio engineering!",
+            verified_purchase=False,
+            platform="Flipkart"
+        ),
+        ReviewItem(
+            id="rev-bot-04",
+            author="DealSeeker_404",
+            rating=5.0,
+            date=(now - timedelta(days=1)).strftime("%Y-%m-%d"),
+            title="Must buy perfection",
+            text="THIS IS A GAME CHANGER AND A TESTAMENT TO INNOVATION! Exceeded all my expectations in every aspect, look no further 5 stars all the way!!!!!!",
+            verified_purchase=False,
+            platform="Walmart"
+        ),
+
+        # Suspicious Anomaly Reviews (Incentivized cashback / repetitive text)
+        ReviewItem(
+            id="rev-susp-01",
+            author="OfferHunter_99",
+            rating=5.0,
+            date=(now - timedelta(days=3)).strftime("%Y-%m-%d"),
+            title="Got 200 cashback reward",
+            text="Seller contacted on WhatsApp offering 200 rs cashback for 5 star rating. Product delivered fine and looks nice.",
+            verified_purchase=False,
+            platform="Amazon"
+        ),
+        ReviewItem(
+            id="rev-susp-02",
+            author="ShortReviewer_82",
+            rating=5.0,
+            date=(now - timedelta(days=4)).strftime("%Y-%m-%d"),
+            title="good good good",
+            text="good good good nice headphones very good quality nice sound very good",
+            verified_purchase=False,
+            platform="Flipkart"
+        ),
+        ReviewItem(
+            id="rev-susp-03",
+            author="IncentiveFan_12",
+            rating=5.0,
+            date=(now - timedelta(days=6)).strftime("%Y-%m-%d"),
+            title="Scratch card bonus in box",
+            text="Came with scratch card inside the retail packaging promising Paytm voucher on 5-star review submission. Decent headphones overall.",
+            verified_purchase=False,
+            platform="Croma"
         )
     ],
 

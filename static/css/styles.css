@@ -33,31 +33,16 @@ body {
     border-radius: 0.5rem;
 }
 
-/* Store Badges */
-.store-badge-amazon {
-    background-color: #fef3c7;
-    color: #92400e;
-    border: 1px solid #fde68a;
-}
-.store-badge-flipkart {
-    background-color: #dbeafe;
-    color: #1e40af;
-    border: 1px solid #bfdbfe;
-}
-.store-badge-croma {
-    background-color: #ccfbf1;
-    color: #115e59;
-    border: 1px solid #99f6e4;
-}
-.store-badge-walmart {
-    background-color: #e0f2fe;
-    color: #0369a1;
-    border: 1px solid #bae6fd;
-}
-.store-badge-ebay {
-    background-color: #fee2e2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
+/* Store Badges - Clean Monochrome */
+.store-badge-amazon,
+.store-badge-flipkart,
+.store-badge-croma,
+.store-badge-walmart,
+.store-badge-ebay,
+.store-badge {
+    background-color: #f3f4f6;
+    color: #000000;
+    border: 1px solid #d1d5db;
 }
 
 /* Custom Scrollbar */

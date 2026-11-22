@@ -25,17 +25,17 @@ CATALOG_PRESETS = {
         }
     },
     "b09xs7jwhh": {
-        "title": "Dropshipped Wireless Earbuds Bluetooth 5.3 with Mic",
+        "title": "Sony WH-1000XM5 Wireless Noise-Canceling Headphones",
         "category": "Electronics & Audio",
-        "base_price": 899.0,
-        "original_price": 2999.0,
-        "thumbnail": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&auto=format&fit=crop&q=80",
+        "base_price": 24989.0,
+        "original_price": 34990.0,
+        "thumbnail": "https://m.media-amazon.com/images/I/61O3iMlnJIL._AC_UF1000,1000_QL80_.jpg",
         "platforms": {
-            "Amazon": {"price_offset": 0, "rating": 4.8, "reviews": 3420, "delivery": 0, "time": "Tomorrow"},
-            "Flipkart": {"price_offset": -100, "rating": 4.7, "reviews": 2100, "delivery": 40, "time": "2 Days"},
-            "Croma": {"price_offset": 200, "rating": 4.2, "reviews": 150, "delivery": 0, "time": "3 Days"},
-            "Walmart": {"price_offset": 150, "rating": 4.5, "reviews": 890, "delivery": 90, "time": "4 Days"},
-            "eBay": {"price_offset": -150, "rating": 4.0, "reviews": 560, "delivery": 120, "time": "5-7 Days"}
+            "Amazon": {"price_offset": 0, "rating": 4.4, "reviews": 17485, "delivery": 0, "time": "Tomorrow, Free Prime"},
+            "Flipkart": {"price_offset": -1000, "rating": 4.5, "reviews": 8920, "delivery": 40, "time": "2 Days"},
+            "Croma": {"price_offset": 500, "rating": 4.6, "reviews": 3120, "delivery": 0, "time": "Same Day Delivery"},
+            "Walmart": {"price_offset": 800, "rating": 4.4, "reviews": 4500, "delivery": 99, "time": "3-5 Days"},
+            "eBay": {"price_offset": -1500, "rating": 4.2, "reviews": 1200, "delivery": 150, "time": "4-6 Days (Import)"}
         }
     },
     "dropshipped earbuds": {
@@ -235,6 +235,7 @@ class PriceAggregator:
         """
         Live scrape Amazon product page using mobile agent for bypass and full DOM extraction.
         Uses clean canonical URL to prevent redirect loops or slow tracking links.
+        Extracts real-time price, M.R.P. original price, rating, reviews count, and high-res thumbnail.
         """
         if not re.search(r'amazon\.[a-z\.]+|amzn\.(?:to|in)', url, re.IGNORECASE):
             return None
@@ -244,7 +245,7 @@ class PriceAggregator:
 
         target_url = clean_url if asin else url
         try:
-            resp = requests.get(target_url, headers=self.headers, timeout=5, allow_redirects=True)
+            resp = requests.get(target_url, headers=self.headers, timeout=8, allow_redirects=True)
             if resp.status_code == 200 and len(resp.text) > 2000:
                 soup = BeautifulSoup(resp.text, 'html.parser')
                 title = None
@@ -263,15 +264,51 @@ class PriceAggregator:
                 if title and title.lower() not in ["amazon.in", "amazon.com", "amazon", "robot check", "sign in", "page not found"]:
                     clean_t = self._clean_title(title)
 
-                    # Price extraction
+                    # Real-time Price extraction
                     price = None
-                    price_el = soup.find('span', class_='a-price-whole') or soup.find('span', id='priceblock_ourprice') or soup.find('span', id='priceblock_dealprice')
+                    price_el = (
+                        soup.find('span', class_='a-price-whole') or 
+                        soup.find('span', class_='apexPriceToPay') or 
+                        soup.find('span', class_='priceToPay') or 
+                        soup.find('span', id='priceblock_ourprice') or 
+                        soup.find('span', id='priceblock_dealprice')
+                    )
                     if price_el:
                         price_digits = re.sub(r'[^\d.]', '', price_el.get_text(strip=True).replace(',', ''))
                         try:
                             price = float(price_digits)
                         except ValueError:
                             pass
+
+                    if not price:
+                        price_m = re.search(r'class=["\'](?:a-price-whole|apexPriceToPay|priceToPay)["\'][^>]*>.*?([0-9,]+(?:\.[0-9]{2})?)', resp.text, re.DOTALL)
+                        if price_m:
+                            try:
+                                price = float(price_m.group(1).replace(',', ''))
+                            except ValueError:
+                                pass
+
+                    # Real-time Original Price (M.R.P.) extraction
+                    original_price = None
+                    mrp_el = (
+                        soup.find('span', class_='a-text-price') or 
+                        soup.find('span', {'data-a-strike': 'true'}) or 
+                        soup.find('span', class_='basisPrice')
+                    )
+                    if mrp_el:
+                        mrp_m = re.search(r'([0-9,]+(?:\.[0-9]{2})?)', mrp_el.get_text(strip=True))
+                        if mrp_m:
+                            try:
+                                original_price = float(mrp_m.group(1).replace(',', ''))
+                            except ValueError:
+                                pass
+                    if not original_price:
+                        mrp_re = re.search(r'M\.?R\.?P\.?:?\s*₹?\s*([0-9,]+(?:\.[0-9]{2})?)', resp.text, re.I)
+                        if mrp_re:
+                            try:
+                                original_price = float(mrp_re.group(1).replace(',', ''))
+                            except ValueError:
+                                pass
 
                     # Rating extraction
                     rating = 4.3
@@ -286,12 +323,19 @@ class PriceAggregator:
 
                     # Review count extraction
                     reviews_count = None
-                    rc_el = soup.find('span', id='acrCustomerReviewText')
+                    rc_el = soup.find('span', id='acrCustomerReviewText') or soup.find('span', {'data-hook': 'total-review-count'})
                     if rc_el:
                         rc_m = re.search(r'([0-9,]+)', rc_el.get_text())
                         if rc_m:
                             try:
                                 reviews_count = int(rc_m.group(1).replace(',', ''))
+                            except ValueError:
+                                pass
+                    if not reviews_count:
+                        rc_re = re.search(r'([0-9,]+)\s*(?:global ratings|customer ratings|ratings|reviews)', resp.text, re.I)
+                        if rc_re:
+                            try:
+                                reviews_count = int(rc_re.group(1).replace(',', ''))
                             except ValueError:
                                 pass
 
@@ -300,18 +344,42 @@ class PriceAggregator:
                     img_el = soup.find(id='landingImage') or soup.find(id='imgBlkFront')
                     if img_el and img_el.get('src'):
                         thumbnail = img_el.get('src')
+                    if not thumbnail:
+                        for img in soup.find_all('img'):
+                            src = img.get('src', '')
+                            if 'media-amazon.com/images/I/' in src and ('_AC_UF' in src or '_SY' in src or '_SX' in src):
+                                thumbnail = src
+                                break
 
                     res = {
                         "title": clean_t,
                         "price": price,
+                        "original_price": original_price,
                         "rating": rating,
                         "reviews_count": reviews_count,
                         "thumbnail": thumbnail,
-                        "url": url
+                        "url": target_url,
+                        "is_live_scraped": True
                     }
                     if asin:
                         self._scraped_cache[asin] = res
                     return res
+        except Exception:
+            pass
+        return None
+
+    def _search_amazon_live(self, query: str) -> Optional[Dict[str, Any]]:
+        """
+        Searches Amazon India live to extract the real-time top matching product and its price.
+        """
+        try:
+            search_url = f"https://www.amazon.in/s?k={urllib.parse.quote(query)}"
+            resp = requests.get(search_url, headers=self.headers, timeout=6)
+            if resp.status_code == 200 and len(resp.text) > 2000:
+                asins = [a for a in re.findall(r'data-asin=["\']([A-Z0-9]{10})["\']', resp.text) if a]
+                if asins:
+                    top_asin = asins[0]
+                    return self._fetch_amazon_details(f"https://www.amazon.in/dp/{top_asin}")
         except Exception:
             pass
         return None
@@ -345,13 +413,45 @@ class PriceAggregator:
     def search_and_compare(self, query: str) -> PriceComparisonResult:
         """
         Aggregates live and algorithmic multi-store offers for the given query/URL.
+        Prioritizes real-time live Amazon scraping whenever an Amazon link or product is queried.
         """
-        preset = self._find_preset(query)
         is_url = "http://" in query or "https://" in query
         is_amazon_url = bool(re.search(r'amazon\.[a-z\.]+|amzn\.(?:to|in)', query, re.I))
 
         scraped_amazon = None
-        if preset:
+        # 1. If it is an Amazon URL, ALWAYS scrape live from Amazon first
+        if is_amazon_url:
+            scraped_amazon = self._fetch_amazon_details(query)
+
+        # 2. Check catalog presets if not live scraped
+        preset = None
+        if not scraped_amazon:
+            preset = self._find_preset(query)
+
+        # 3. If keyword search without preset, try live Amazon search
+        if not scraped_amazon and not preset and not is_url and len(query.strip()) > 3:
+            scraped_amazon = self._search_amazon_live(query)
+
+        if scraped_amazon and scraped_amazon.get("price"):
+            product_name = scraped_amazon["title"]
+            category = self._infer_category(product_name)
+            thumbnail = scraped_amazon.get("thumbnail") or self._infer_thumbnail(category)
+            base_price = scraped_amazon["price"]
+            original_price = scraped_amazon.get("original_price") or round(base_price * 1.25, -1)
+            if original_price < base_price:
+                original_price = round(base_price * 1.2, -1)
+                
+            scraped_rev = scraped_amazon.get("reviews_count") or random.randint(3500, 14200)
+            scraped_rat = scraped_amazon.get("rating") or 4.4
+
+            platforms_data = {
+                "Amazon": {"price_offset": 0, "rating": scraped_rat, "reviews": scraped_rev, "delivery": 0, "time": "Tomorrow, Free Prime"},
+                "Flipkart": {"price_offset": -round(base_price * 0.04), "rating": round(max(3.8, scraped_rat - 0.1), 1), "reviews": int(scraped_rev * 0.75), "delivery": 40, "time": "2 Days"},
+                "Croma": {"price_offset": round(base_price * 0.02), "rating": round(min(4.9, scraped_rat + 0.1), 1), "reviews": int(scraped_rev * 0.25), "delivery": 0, "time": "Same Day Delivery"},
+                "Walmart": {"price_offset": round(base_price * 0.05), "rating": round(scraped_rat - 0.2, 1), "reviews": int(scraped_rev * 0.4), "delivery": 90, "time": "3-5 Days"},
+                "eBay": {"price_offset": -round(base_price * 0.08), "rating": round(scraped_rat - 0.4, 1), "reviews": int(scraped_rev * 0.15), "delivery": 150, "time": "5-7 Days"}
+            }
+        elif preset:
             # Preset matched: use instant preset
             product_name = preset["title"]
             category = preset["category"]
@@ -360,49 +460,29 @@ class PriceAggregator:
             original_price = preset["original_price"]
             platforms_data = preset["platforms"]
         elif is_amazon_url:
-            scraped_amazon = self._fetch_amazon_details(query)
-            if scraped_amazon:
-                product_name = scraped_amazon["title"]
-                category = self._infer_category(product_name)
-                thumbnail = scraped_amazon["thumbnail"] or self._infer_thumbnail(category)
-                scraped_p = scraped_amazon["price"]
-                base_price = scraped_p if scraped_p and scraped_p > 50 else self._infer_base_price(category, product_name)
-                original_price = round(base_price * random.uniform(1.2, 1.35), -1)
-                
-                scraped_rev = scraped_amazon["reviews_count"] or random.randint(3500, 14200)
-                scraped_rat = scraped_amazon["rating"] or 4.4
-
-                platforms_data = {
-                    "Amazon": {"price_offset": 0, "rating": scraped_rat, "reviews": scraped_rev, "delivery": 0, "time": "Tomorrow, Free Prime"},
-                    "Flipkart": {"price_offset": -round(base_price * 0.04), "rating": round(max(3.8, scraped_rat - 0.1), 1), "reviews": int(scraped_rev * 0.75), "delivery": 40, "time": "2 Days"},
-                    "Croma": {"price_offset": round(base_price * 0.02), "rating": round(min(4.9, scraped_rat + 0.1), 1), "reviews": int(scraped_rev * 0.25), "delivery": 0, "time": "Same Day Delivery"},
-                    "Walmart": {"price_offset": round(base_price * 0.05), "rating": round(scraped_rat - 0.2, 1), "reviews": int(scraped_rev * 0.4), "delivery": 90, "time": "3-5 Days"},
-                    "eBay": {"price_offset": -round(base_price * 0.08), "rating": round(scraped_rat - 0.4, 1), "reviews": int(scraped_rev * 0.15), "delivery": 150, "time": "5-7 Days"}
-                }
+            # Live scraping failed or blocked: graceful fallback
+            slug, asin = self._extract_amazon_slug_and_asin(query) if is_url else (None, None)
+            if slug:
+                product_name = slug.title()
+            elif asin and asin.lower() in CATALOG_PRESETS:
+                product_name = CATALOG_PRESETS[asin.lower()]["title"]
+            elif asin:
+                product_name = f"Amazon Verified Product ({asin})"
             else:
-                # Live scraping failed or blocked: graceful fallback
-                slug, asin = self._extract_amazon_slug_and_asin(query) if is_url else (None, None)
-                if slug:
-                    product_name = slug.title()
-                elif asin and asin.lower() in CATALOG_PRESETS:
-                    product_name = CATALOG_PRESETS[asin.lower()]["title"]
-                elif asin:
-                    product_name = f"Amazon Verified Product ({asin})"
-                else:
-                    product_name = "Amazon Prime Certified Item"
+                product_name = "Amazon Prime Certified Item"
 
-                category = self._infer_category(product_name)
-                thumbnail = self._infer_thumbnail(category)
-                base_price = self._infer_base_price(category, product_name)
-                original_price = round(base_price * random.uniform(1.15, 1.35), -1)
+            category = self._infer_category(product_name)
+            thumbnail = self._infer_thumbnail(category)
+            base_price = self._infer_base_price(category, product_name)
+            original_price = round(base_price * random.uniform(1.15, 1.35), -1)
 
-                platforms_data = {
-                    "Amazon": {"price_offset": random.randint(-400, 200), "rating": 4.5, "reviews": random.randint(1000, 8000), "delivery": 0, "time": "1-2 Days"},
-                    "Flipkart": {"price_offset": random.randint(-600, -50), "rating": 4.4, "reviews": random.randint(800, 6000), "delivery": 40, "time": "2-3 Days"},
-                    "Croma": {"price_offset": random.randint(-200, 400), "rating": 4.6, "reviews": random.randint(300, 2500), "delivery": 0, "time": "Express Store Delivery"},
-                    "Walmart": {"price_offset": random.randint(100, 600), "rating": 4.3, "reviews": random.randint(1500, 5000), "delivery": 80, "time": "3-5 Days"},
-                    "eBay": {"price_offset": random.randint(-800, -300), "rating": 4.1, "reviews": random.randint(200, 1500), "delivery": 120, "time": "4-7 Days"}
-                }
+            platforms_data = {
+                "Amazon": {"price_offset": random.randint(-400, 200), "rating": 4.5, "reviews": random.randint(1000, 8000), "delivery": 0, "time": "1-2 Days"},
+                "Flipkart": {"price_offset": random.randint(-600, -50), "rating": 4.4, "reviews": random.randint(800, 6000), "delivery": 40, "time": "2-3 Days"},
+                "Croma": {"price_offset": random.randint(-200, 400), "rating": 4.6, "reviews": random.randint(300, 2500), "delivery": 0, "time": "Express Store Delivery"},
+                "Walmart": {"price_offset": random.randint(100, 600), "rating": 4.3, "reviews": random.randint(1500, 5000), "delivery": 80, "time": "3-5 Days"},
+                "eBay": {"price_offset": random.randint(-800, -300), "rating": 4.1, "reviews": random.randint(200, 1500), "delivery": 120, "time": "4-7 Days"}
+            }
         else:
             # Fallback for generic keyword queries
             clean_q = self._normalize_query(query).title()

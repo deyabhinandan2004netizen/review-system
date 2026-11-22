@@ -9,7 +9,7 @@ const TEST_CASES = {
     case1: {
         id: "case1",
         label: "Case 1: Dropshipped Earbuds (Bot Spammed)",
-        url: "https://www.amazon.in/dp/B09XS7JWHH",
+        url: "https://www.amazon.in/dp/B0FAKE01EAR",
         query: "dropshipped earbuds",
         category: "DROPSHIPPED ELECTRONICS",
         title: "Wireless Bluetooth 5.3 Earbuds Deep Bass Waterproof IPX7",
@@ -379,20 +379,20 @@ function renderAuthenticityCard(data) {
     altText.innerHTML = data.alternative;
 
     if (data.verdictType === "success") {
-        verdictCard.className = "bg-[#f0fdf4] border border-[#86efac] rounded-xl p-5 space-y-2.5 transition-all";
-        iconBox.className = "w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs";
+        verdictCard.className = "bg-white border-2 border-black rounded-xl p-5 space-y-2.5 transition-all";
+        iconBox.className = "w-6 h-6 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs";
         icon.className = "fa-solid fa-check";
-        title.className = "font-extrabold text-sm sm:text-base tracking-wide text-emerald-800";
+        title.className = "font-extrabold text-sm sm:text-base tracking-wide text-black";
     } else if (data.verdictType === "warning") {
-        verdictCard.className = "bg-[#fffbeb] border border-[#fde68a] rounded-xl p-5 space-y-2.5 transition-all";
-        iconBox.className = "w-6 h-6 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xs";
+        verdictCard.className = "bg-white border-2 border-gray-400 rounded-xl p-5 space-y-2.5 transition-all";
+        iconBox.className = "w-6 h-6 rounded-full bg-gray-800 text-white flex items-center justify-center font-bold text-xs";
         icon.className = "fa-solid fa-triangle-exclamation";
-        title.className = "font-extrabold text-sm sm:text-base tracking-wide text-amber-800";
+        title.className = "font-extrabold text-sm sm:text-base tracking-wide text-gray-900";
     } else { // danger
-        verdictCard.className = "bg-[#fef2f2] border border-[#fca5a5] rounded-xl p-5 space-y-2.5 transition-all";
-        iconBox.className = "w-6 h-6 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-xs";
+        verdictCard.className = "bg-white border-2 border-black rounded-xl p-5 space-y-2.5 transition-all";
+        iconBox.className = "w-6 h-6 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs";
         icon.className = "fa-solid fa-xmark";
-        title.className = "font-extrabold text-sm sm:text-base tracking-wide text-rose-800";
+        title.className = "font-extrabold text-sm sm:text-base tracking-wide text-black";
     }
 }
 
@@ -402,11 +402,11 @@ function renderStars(rating) {
     let html = "";
     for (let i = 1; i <= 5; i++) {
         if (i <= full) {
-            html += `<i class="fa-solid fa-star text-amber-500"></i>`;
+            html += `<i class="fa-solid fa-star text-black"></i>`;
         } else if (i === full + 1 && half) {
-            html += `<i class="fa-solid fa-star-half-stroke text-amber-500"></i>`;
+            html += `<i class="fa-solid fa-star-half-stroke text-black"></i>`;
         } else {
-            html += `<i class="fa-solid fa-star text-amber-500 opacity-25"></i>`;
+            html += `<i class="fa-solid fa-star text-gray-300"></i>`;
         }
     }
     return html;
@@ -438,39 +438,33 @@ function renderPriceGrid(data) {
     data.offers.forEach(offer => {
         const isBest = offer.is_best_deal;
         const card = document.createElement("div");
-        card.className = `simple-card p-4 space-y-3 bg-white flex flex-col justify-between transition hover:shadow-md ${isBest ? 'border-emerald-500 ring-1 ring-emerald-400' : ''}`;
-
-        let storeBadgeClass = "store-badge-amazon";
-        if (offer.platform === "Flipkart") storeBadgeClass = "store-badge-flipkart";
-        if (offer.platform === "Croma") storeBadgeClass = "store-badge-croma";
-        if (offer.platform === "Walmart") storeBadgeClass = "store-badge-walmart";
-        if (offer.platform === "eBay") storeBadgeClass = "store-badge-ebay";
+        card.className = `simple-card p-4 space-y-3 bg-white flex flex-col justify-between transition hover:shadow-md ${isBest ? 'border-2 border-black ring-1 ring-black' : 'border border-gray-200'}`;
 
         card.innerHTML = `
             <div>
                 <div class="flex items-center justify-between mb-2">
-                    <span class="${storeBadgeClass} px-2 py-0.5 rounded text-[11px] font-bold">${offer.platform}</span>
-                    ${isBest ? `<span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-1.5 py-0.5 rounded">Best Deal</span>` : ''}
+                    <span class="store-badge px-2 py-0.5 rounded text-[11px] font-bold bg-gray-100 text-black border border-gray-300">${offer.platform}</span>
+                    ${isBest ? `<span class="bg-black text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Best Deal</span>` : ''}
                 </div>
 
                 <div class="space-y-0.5 my-2">
-                    <div class="text-xl font-extrabold text-gray-900">₹${offer.price.toLocaleString('en-IN')}</div>
-                    ${offer.discount_percent > 0 ? `<div class="text-[11px] text-gray-400"><span class="line-through">₹${offer.original_price.toLocaleString('en-IN')}</span> <span class="text-emerald-600 font-bold ml-1">${offer.discount_percent}% off</span></div>` : ''}
+                    <div class="text-xl font-extrabold text-black">₹${offer.price.toLocaleString('en-IN')}</div>
+                    ${offer.discount_percent > 0 ? `<div class="text-[11px] text-gray-500"><span class="line-through">₹${offer.original_price.toLocaleString('en-IN')}</span> <span class="text-black font-bold ml-1">${offer.discount_percent}% off</span></div>` : ''}
                 </div>
 
                 <div class="text-[11px] text-gray-500 space-y-1 pt-2 border-t border-gray-100">
                     <div class="flex justify-between">
                         <span>Delivery:</span>
-                        <span class="font-medium text-gray-700">${offer.delivery_fee === 0 ? 'FREE' : '₹' + offer.delivery_fee}</span>
+                        <span class="font-medium text-black">${offer.delivery_fee === 0 ? 'FREE' : '₹' + offer.delivery_fee}</span>
                     </div>
                     <div class="flex justify-between">
                         <span>Rating:</span>
-                        <span class="font-medium text-gray-700">${offer.rating}★ (${offer.rating_count.toLocaleString()})</span>
+                        <span class="font-medium text-black">${offer.rating}★ (${offer.rating_count.toLocaleString()})</span>
                     </div>
                 </div>
             </div>
 
-            <a href="${offer.product_url}" target="_blank" class="w-full py-1.5 px-3 rounded-md text-xs font-semibold text-center transition ${isBest ? 'bg-black hover:bg-neutral-800 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}">
+            <a href="${offer.product_url}" target="_blank" class="w-full py-1.5 px-3 rounded-md text-xs font-semibold text-center transition ${isBest ? 'bg-black hover:bg-neutral-800 text-white' : 'border border-gray-300 bg-white hover:bg-gray-100 text-black'}">
                 View on ${offer.platform}
             </a>
         `;
@@ -527,20 +521,20 @@ function filterAndRenderReviews(filter) {
         const item = document.createElement("div");
         item.className = "p-3.5 rounded-lg border border-gray-200 bg-[#f9fafb] space-y-2 text-xs";
 
-        let labelBadge = `<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1"><i class="fa-solid fa-circle-check text-emerald-600"></i> REAL REVIEW</span>`;
+        let labelBadge = `<span class="bg-white text-black border border-black text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1"><i class="fa-solid fa-circle-check text-black"></i> REAL REVIEW</span>`;
         if (rev.classification_label === "SUSPICIOUS") {
-            labelBadge = `<span class="bg-amber-100 text-amber-800 border border-amber-300 text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1"><i class="fa-solid fa-circle-exclamation text-amber-600"></i> SUSPICIOUS REVIEW</span>`;
+            labelBadge = `<span class="bg-gray-100 text-gray-800 border border-gray-400 text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1"><i class="fa-solid fa-circle-exclamation text-gray-600"></i> SUSPICIOUS REVIEW</span>`;
         } else if (rev.classification_label === "BOT_DETECTED") {
-            labelBadge = `<span class="bg-rose-100 text-rose-800 border border-rose-300 text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation text-rose-600"></i> FAKE REVIEW</span>`;
+            labelBadge = `<span class="bg-black text-white border border-black text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation text-white"></i> FAKE REVIEW</span>`;
         }
 
-        const reasonTags = rev.reasons.map(r => `<span class="inline-block bg-white text-gray-600 border border-gray-200 text-[10px] px-1.5 py-0.5 rounded mr-1">${r}</span>`).join("");
+        const reasonTags = rev.reasons.map(r => `<span class="inline-block bg-white text-gray-700 border border-gray-300 text-[10px] px-1.5 py-0.5 rounded mr-1">${r}</span>`).join("");
 
         item.innerHTML = `
             <div class="flex items-center justify-between">
                 <div>
                     <span class="font-bold text-gray-900">${rev.author}</span>
-                    <span class="text-amber-500 font-bold ml-1">${rev.rating}★</span>
+                    <span class="text-black font-bold ml-1">${rev.rating}★</span>
                     <span class="text-gray-400 text-[10px] ml-1">(${rev.platform} • ${rev.date})</span>
                 </div>
                 <div>${labelBadge}</div>
@@ -576,29 +570,29 @@ function renderABSA(aspects) {
         const card = document.createElement("div");
         card.className = "simple-card p-4 space-y-3 bg-white";
 
-        const prosHtml = asp.pros.map(p => `<li class="flex items-start gap-1.5 text-xs text-gray-700"><i class="fa-solid fa-check text-emerald-600 text-[10px] mt-1"></i> <span>${p}</span></li>`).join("");
-        const consHtml = asp.cons.map(c => `<li class="flex items-start gap-1.5 text-xs text-gray-700"><i class="fa-solid fa-xmark text-rose-600 text-[10px] mt-1"></i> <span>${c}</span></li>`).join("");
+        const prosHtml = asp.pros.map(p => `<li class="flex items-start gap-1.5 text-xs text-gray-800"><i class="fa-solid fa-check text-black text-[10px] mt-1"></i> <span>${p}</span></li>`).join("");
+        const consHtml = asp.cons.map(c => `<li class="flex items-start gap-1.5 text-xs text-gray-800"><i class="fa-solid fa-xmark text-gray-500 text-[10px] mt-1"></i> <span>${c}</span></li>`).join("");
 
         card.innerHTML = `
             <div class="flex items-center justify-between text-xs">
                 <span class="font-bold text-gray-900">${asp.aspect}</span>
-                <span class="font-extrabold ${asp.positive_score > 60 ? 'text-emerald-700' : 'text-amber-700'}">${asp.positive_score}% Positive</span>
+                <span class="font-extrabold text-black">${asp.positive_score}% Positive</span>
             </div>
 
-            <!-- Sentiment Bar -->
+            <!-- Sentiment Bar: Clean Monochrome -->
             <div class="w-full h-1.5 rounded-full bg-gray-200 flex overflow-hidden">
-                <div style="width: ${asp.positive_score}%" class="bg-emerald-500 h-full"></div>
-                <div style="width: ${asp.neutral_score}%" class="bg-amber-400 h-full"></div>
-                <div style="width: ${asp.negative_score}%" class="bg-rose-500 h-full"></div>
+                <div style="width: ${asp.positive_score}%" class="bg-black h-full"></div>
+                <div style="width: ${asp.neutral_score}%" class="bg-gray-400 h-full"></div>
+                <div style="width: ${asp.negative_score}%" class="bg-gray-200 h-full"></div>
             </div>
 
             <div class="space-y-2 pt-1 border-t border-gray-100">
                 <div class="space-y-1">
-                    <div class="text-[10px] font-bold text-emerald-800 uppercase">Key Pros</div>
+                    <div class="text-[10px] font-bold text-black uppercase tracking-wider">Key Pros</div>
                     <ul class="space-y-0.5">${prosHtml || '<li class="text-xs text-gray-400">None detected.</li>'}</ul>
                 </div>
                 <div class="space-y-1">
-                    <div class="text-[10px] font-bold text-rose-800 uppercase">Key Cons</div>
+                    <div class="text-[10px] font-bold text-gray-600 uppercase tracking-wider">Key Cons</div>
                     <ul class="space-y-0.5">${consHtml || '<li class="text-xs text-gray-400">None detected.</li>'}</ul>
                 </div>
             </div>
