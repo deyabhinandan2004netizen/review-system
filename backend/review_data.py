@@ -516,6 +516,7 @@ def get_product_reviews(product_name: str) -> List[ReviewItem]:
         short_title = short_title[:38] + "..."
 
     t = clean_name
+    is_sports = any(w in t for w in ["racquet", "racket", "badminton", "tennis", "cricket", "bat", "football", "gym", "dumbbell", "sports", "yonex", "li-ning", "shuttle", "shuttlecock", "grip"])
     is_audio = any(w in t for w in ["headphone", "earbud", "earphone", "audio", "airdope", "neckband", "speaker", "soundbar", "tws", "anc", "buds"])
     is_cooler = any(w in t for w in ["cooler", "cooling", "pad", "stand", "fan"])
     is_phone = any(w in t for w in ["iphone", "galaxy", "smartphone", "phone", "mobile", "pixel", "oneplus", "redmi", "realme"])
@@ -523,7 +524,17 @@ def get_product_reviews(product_name: str) -> List[ReviewItem]:
     is_watch = any(w in t for w in ["watch", "smartwatch", "fitness", "band", "tracker"])
     is_health = any(w in t for w in ["juice", "ayurvedic", "detox", "slimming", "protein", "supplement", "vitamin", "health"])
 
-    if is_cooler:
+    if is_sports:
+        real_reviews = [
+            ("Aman Mehra", 5.0, 4, "Excellent lightweight racquet for intermediate play", f"The frame balance on {short_title} allows quick wrist maneuvers at the net and rapid defensive blocks. Aluminium alloy feels very sturdy against court knocks.", "Amazon"),
+            ("Deepak Rao", 4.0, 11, "Good string tension, handle grip is thin", f"Strung tension is solid for recreational doubles rallies. The sweet spot is forgiving for beginners, though the original grip tape is a bit thin so adding an overgrip is recommended.", "Flipkart"),
+            ("Pooja Sen", 5.0, 18, "Durable frame and great maneuverability", f"Very well balanced and lightweight to swing during long 3-set matches. Comes with a full zipper cover that protects strings from dust and moisture.", "Amazon"),
+            ("Sameer Khan", 4.0, 25, "Solid control, moderate smash power", f"Gives crisp drop shots and controlled clears. Because of the lightweight aluminium construction, overhead smashes have decent power but less punch than heavy graphite frames.", "Amazon"),
+            ("Rashmi Trivedi", 5.0, 33, "Great build quality and genuine Yonex seal", f"Authentic product with intact hologram and serial code on the cone. Has held string tension reliably over a month of weekend club matches.", "Amazon"),
+            ("Kartik Bansal", 4.0, 41, "Great value for beginners and casual players", f"Excellent value for money. Perfect for coaching sessions and daily casual games without worrying about breaking expensive graphite shafts.", "Flipkart"),
+            ("Bhavna Shah", 5.0, 50, "Prompt delivery and great balance", f"Delivered securely in bubble wrap. Very comfortable racquet for recreational evening games with friends.", "Amazon")
+        ]
+    elif is_cooler:
         real_reviews = [
             ("Sunil Sharma", 5.0, 4, "Significant temperature drop during heavy gaming", f"Tested {short_title} with my RTX gaming laptop. CPU and GPU temperatures dropped by 6-8°C during heavy sessions. The 5 fans push noticeable airflow while remaining whisper quiet under 21 dBA.", "Amazon"),
             ("Megha Sengupta", 4.0, 11, "Sturdy build, great ergonomic height angles", f"The 5 height angle adjustments relieve neck and wrist strain during long work hours. The dual USB pass-through ports are very convenient so I don't lose a port on my laptop.", "Flipkart"),

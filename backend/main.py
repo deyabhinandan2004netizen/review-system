@@ -127,7 +127,7 @@ async def analyze_product_reviews(product_name: str = Query(...), custom_reviews
     
     # 2. Run Aspect-Based Sentiment Analysis (ABSA) on authentic reviews
     authentic_only = [r for r in reviews if not any(c.review_id == r.id and c.is_bot for c in analysis_res.classifications)]
-    aspect_scores = await asyncio.to_thread(absa_engine.analyze_aspects, authentic_only if authentic_only else reviews)
+    aspect_scores = await asyncio.to_thread(absa_engine.analyze_aspects, authentic_only if authentic_only else reviews, product_name)
     analysis_res.aspect_analysis = aspect_scores
     
     return analysis_res

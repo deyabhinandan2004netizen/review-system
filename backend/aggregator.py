@@ -569,7 +569,9 @@ class PriceAggregator:
 
     def _infer_category(self, title: str) -> str:
         t = title.lower()
-        if any(w in t for w in ["cooler", "cooling", "pad", "stand", "fan", "mouse", "keyboard", "hub", "charger", "cable", "adapter", "gan", "power bank"]):
+        if any(w in t for w in ["racquet", "racket", "badminton", "tennis", "cricket", "bat", "football", "gym", "dumbbell", "sports", "yonex", "li-ning", "shuttle", "shuttlecock", "grip"]):
+            return "Sports & Fitness"
+        elif any(w in t for w in ["cooler", "cooling", "pad", "stand", "fan", "mouse", "keyboard", "hub", "charger", "cable", "adapter", "gan", "power bank"]):
             return "Electronics & Accessories"
         elif any(w in t for w in ["headphone", "earbud", "earphone", "audio", "airdope", "neckband", "speaker", "soundbar", "tws", "anc", "buds"]):
             return "Electronics & Audio"
@@ -581,10 +583,11 @@ class PriceAggregator:
             return "Wearables & Smartwatches"
         elif any(w in t for w in ["juice", "ayurvedic", "detox", "slimming", "protein", "supplement", "vitamin", "health"]):
             return "Health & Personal Care"
-        return "Consumer Electronics & Tech"
+        return "General Goods & Retail"
 
     def _infer_thumbnail(self, category: str) -> str:
         images = {
+            "Sports & Fitness": "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600&auto=format&fit=crop&q=80",
             "Electronics & Audio": "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=600&auto=format&fit=crop&q=80",
             "Smartphones & Mobile": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop&q=80",
             "Laptops & Computing": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&auto=format&fit=crop&q=80",
@@ -602,6 +605,10 @@ class PriceAggregator:
             return 79999.0
         if "macbook" in t:
             return 99900.0
+        if category == "Sports & Fitness":
+            if "yonex" in t or "zr 100" in t:
+                return 749.0
+            return 1199.0
         if category == "Electronics & Audio":
             if any(w in t for w in ["airdope", "neckband", "boat", "noise", "boult"]):
                 return 1399.0
